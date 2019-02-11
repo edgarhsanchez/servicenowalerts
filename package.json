@@ -1,0 +1,31 @@
+{
+  "name": "servicenowalerts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "gulp app:build",
+    "watch": "gulp app:watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/edgarhsanchez/servicenowalerts.git"
+  },
+  "keywords": [
+    "servicenow",
+    "status",
+    "indicators"
+  ],
+  "author": "Edgar H. Sanchez",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/edgarhsanchez/servicenowalerts/issues"
+  },
+  "homepage": "https://github.com/edgarhsanchez/servicenowalerts#readme",
+  "devDependencies": {
+    "gulp": "^4.0.0",
+    "gulp-sync": "^0.1.4",
+    "gulp-util": "^3.0.8"
+  }
+}
