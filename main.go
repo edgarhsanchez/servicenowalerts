@@ -11,24 +11,35 @@ func main() {
 }
 
 func onReady() {
-	iconData, err := getIconBytes()
+	iconData, err := getIconBytes("ServiceNowImg.ico")
 	if err == nil {
 		systray.SetIcon(iconData)
 	}
 	systray.SetTitle("Servive Now Alerts")
-	systray.SetTooltip("The tips of spear")
-	mQuit := systray.AddMenuItem("Quit", "Quit the app")
+	systray.SetTooltip("Service Now Alerts")
 
+	setupExitMenu()
+
+}
+
+func setupExitMenu() {
+	//setup exit menu
+	mQuitMenuItem := systray.AddMenuItem("Quit", "Quit the app")
+	quitIconData, err := getIconBytes("off.ico")
+	if err == nil {
+		mQuitMenuItem.SetIcon(quitIconData)
+	}
+	//setup exit go routine
+	go func() {
+		<-mQuitMenuItem.ClickedCh
+		systray.Quit()
+	}()
 }
 
 func onExit() {
 
 }
 
-func exit(mQuitMenuItem *MenuItem) {
-
-}
-
-func getIconBytes() ([]byte, error) {
-	return ioutil.ReadFile("ServiceNowImg.ico")
+func getIconBytes(fileName string) ([]byte, error) {
+	return ioutil.ReadFile(fileName)
 }
