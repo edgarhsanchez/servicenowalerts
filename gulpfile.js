@@ -2,6 +2,7 @@ var gulp = require('gulp');
 var sync = require('gulp-sync')(gulp).sync;
 var child = require('child_process');
 var util = require('gulp-util');
+var notifier   = require('node-notifier');
 
 /*
  * Override gulp.src() for nicer error handling.
@@ -37,6 +38,12 @@ gulp.task('app:install', function(){
         title: 'Error (go install)',
         message: lines
       });
+    } else {
+      var lines = build.stdout.toString()
+      notifier.notify({
+        title: 'Successful install', 
+        message: lines
+      })
     }
     return build;
 })
