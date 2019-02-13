@@ -11,12 +11,14 @@ func main() {
 }
 
 func onReady() {
-	iconData, err := getIconBytes("ServiceNowImg.ico")
+	iconData, err := getIconBytes("resources/ServiceNowImg.ico")
 	if err == nil {
 		systray.SetIcon(iconData)
 	}
 	systray.SetTitle("Servive Now Alerts")
 	systray.SetTooltip("Service Now Alerts")
+
+	setupCredsMenu()
 
 	setupExitMenu()
 
@@ -24,8 +26,9 @@ func onReady() {
 
 func setupExitMenu() {
 	//setup exit menu
+	systray.AddSeparator()
 	mQuitMenuItem := systray.AddMenuItem("Quit", "Quit the app")
-	quitIconData, err := getIconBytes("off.ico")
+	quitIconData, err := getIconBytes("resources/off.ico")
 	if err == nil {
 		mQuitMenuItem.SetIcon(quitIconData)
 	}
@@ -34,6 +37,23 @@ func setupExitMenu() {
 		<-mQuitMenuItem.ClickedCh
 		systray.Quit()
 	}()
+}
+
+func setupCredsMenu() {
+	//setup credentials launching menu item
+	mLaunchCredsMenuItem := systray.AddMenuItem("Enter Credentials", "Launch Window to Enter Service Now Credentials")
+	launchCredsIconData, err := getIconBytes("resources/Key.ico")
+	if err == nil {
+		mLaunchCredsMenuItem.SetIcon(launchCredsIconData)
+	}
+
+	// setup launch creds menu item go routing
+	go func() {
+		<-mLaunchCredsMenuItem.ClickedCh
+
+	}()
+
+	defer a.Close()
 }
 
 func onExit() {
