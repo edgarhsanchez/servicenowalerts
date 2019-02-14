@@ -52,8 +52,6 @@ func setupCredsMenu() {
 		<-mLaunchCredsMenuItem.ClickedCh
 
 	}()
-
-	defer a.Close()
 }
 
 func onExit() {
