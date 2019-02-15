@@ -1,5 +1,5 @@
 var gulp = require('gulp');
-var sync = require('gulp-sync')(gulp).sync;
+// var sync = require('gulp-sync')(gulp).sync;
 var child = require('child_process');
 var util = require('gulp-util');
 var notifier   = require('node-notifier');

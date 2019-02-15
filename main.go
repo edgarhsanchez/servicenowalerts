@@ -4,6 +4,7 @@ import (
 	"io/ioutil"
 
 	"github.com/getlantern/systray"
+	"github.com/zserge/webview"
 )
 
 func main() {
@@ -48,10 +49,7 @@ func setupCredsMenu() {
 	}
 
 	// setup launch creds menu item go routing
-	go func() {
-		<-mLaunchCredsMenuItem.ClickedCh
-
-	}()
+	go openWebView(mLaunchCredsMenuItem)
 }
 
 func onExit() {
@@ -60,4 +58,10 @@ func onExit() {
 
 func getIconBytes(fileName string) ([]byte, error) {
 	return ioutil.ReadFile(fileName)
+}
+
+func openWebView(mLaunchCredsMenuItem *systray.MenuItem) {
+	<-mLaunchCredsMenuItem.ClickedCh
+	webview.Open("Service Now Alerts", "https://www.google.com", 800, 600, true)
+	go openWebView(mLaunchCredsMenuItem)
 }
