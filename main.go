@@ -19,7 +19,9 @@ func onReady() {
 	systray.SetTitle("Servive Now Alerts")
 	systray.SetTooltip("Service Now Alerts")
 
-	setupCredsMenu()
+	webView := createWebView()
+
+	setupCredsMenu(webView)
 
 	setupExitMenu()
 
@@ -40,7 +42,7 @@ func setupExitMenu() {
 	}()
 }
 
-func setupCredsMenu() {
+func setupCredsMenu(webView *webview.WebView) {
 	//setup credentials launching menu item
 	mLaunchCredsMenuItem := systray.AddMenuItem("Enter Credentials", "Launch Window to Enter Service Now Credentials")
 	launchCredsIconData, err := getIconBytes("resources/Key.ico")
@@ -49,7 +51,7 @@ func setupCredsMenu() {
 	}
 
 	// setup launch creds menu item go routing
-	go openWebView(mLaunchCredsMenuItem)
+	go setupOpenCredsEvent(webView, mLaunchCredsMenuItem)
 }
 
 func onExit() {
@@ -60,8 +62,22 @@ func getIconBytes(fileName string) ([]byte, error) {
 	return ioutil.ReadFile(fileName)
 }
 
-func openWebView(mLaunchCredsMenuItem *systray.MenuItem) {
+func createWebView() *webview.WebView {
+	webView := webview.New(webview.Settings{
+		Title:     "Service Now Alerts",
+		URL:       "https://www.google.com",
+		Width:     800,
+		Height:    600,
+		Resizable: true,
+	})
+	defer webView.Exit()
+	webView.SetFullscreen(true)
+	webView.Run()
+	return &webView
+}
+
+func setupOpenCredsEvent(webView *webview.WebView, mLaunchCredsMenuItem *systray.MenuItem) {
 	<-mLaunchCredsMenuItem.ClickedCh
-	webview.Open("Service Now Alerts", "https://www.google.com", 800, 600, true)
-	go openWebView(mLaunchCredsMenuItem)
+	(*webView).Run()
+	go setupOpenCredsEvent(webView, mLaunchCredsMenuItem)
 }
