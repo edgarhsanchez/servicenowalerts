@@ -4,10 +4,9 @@ import (
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/rand"
+	"crypto/sha256"
 	"errors"
 	"io"
-
-	"golang.org/x/crypto/bcrypt"
 )
 
 // EncryptPassword takes a string encrypts and returns the ciphertext
@@ -60,10 +59,8 @@ func getEncryptionKey(key string) (cipher.Block, error) {
 		return nil, errors.New("SECRET_KEY environment variable not found")
 	}
 
-	hashedKey, err := hash(key)
-	if err != nil {
-		return nil, err
-	}
+	hashedKey := hash(key)
+
 	keyCipherBlock, err := aes.NewCipher(hashedKey)
 	if err != nil {
 		return nil, err
@@ -72,6 +69,7 @@ func getEncryptionKey(key string) (cipher.Block, error) {
 	return keyCipherBlock, nil
 }
 
-func hash(str string) ([]byte, error) {
-	return bcrypt.GenerateFromPassword([]byte(str), 14)
+func hash(str string) []byte {
+	h := sha256.Sum256([]byte(str))
+	return h[:]
 }
