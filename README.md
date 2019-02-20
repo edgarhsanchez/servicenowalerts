@@ -6,6 +6,8 @@ This simple application allows a browser to be launched with the ability to conn
 This project uses libraries from the community which provide system tray icon support and application controlled browser for notification support.
 
 Libraries
+"github.com/awnumar/memguard"
+"github.com/go-bindata/go-bindata/..."
 "github.com/getlantern/systray"
 "github.com/zserge/webview" :  additional libraries for MinGW and 64 bit support required to build on windows.  Please read the documentation there for more information.
 

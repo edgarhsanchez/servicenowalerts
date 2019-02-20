@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html id="app">
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <link rel="stylesheet" href="css/servicenow.css">
+    <title> {{ title }}</title>
+    <body>
+        <div class="condition1Border">
+            <div class="condition2Border">
+                <div class="condition3Border">
+                    <iframe class="content" src="svc_now.url"></iframe>
+                </div>
+            </div>
+        </div>
+
+            <script>
+                    var vm = new Vue({
+                        el: '#app',
+                        data: { svc_now: svc_now },
+                        methods: {
+                            saveServiceNowInfo: function(serviceNowUrl, userName, password) {
+                                svc_now.saveServiceNowInfo(userName);
+                            }
+                        }
+                    })
+                </script>
+
+    </body>
+    
+</html>

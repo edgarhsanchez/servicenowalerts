@@ -2,9 +2,30 @@ package main
 
 import (
 	"io/ioutil"
+	"net/http"
+
+	"github.com/awnumar/memguard"
 
 	"github.com/getlantern/systray"
 	"github.com/zserge/webview"
+)
+
+type ServiceNow struct {
+	url   string
+	title string
+}
+
+func (svcNow *ServiceNow) saveServiceNowInfo(serviceNowUrl string, userName string, password string) {
+	_userName = userName
+	_password, _ = memguard.NewMutableFromBytes([]byte(password))
+}
+
+var (
+	_secret_key string
+	_viewUrl    string
+	_userName   string
+	_password   *memguard.LockedBuffer
+	_serviceNow ServiceNow
 )
 
 func main() {
@@ -12,6 +33,7 @@ func main() {
 }
 
 func onReady() {
+
 	iconData, err := getIconBytes("resources/ServiceNowImg.ico")
 	if err == nil {
 		systray.SetIcon(iconData)
@@ -19,11 +41,24 @@ func onReady() {
 	systray.SetTitle("Servive Now Alerts")
 	systray.SetTooltip("Service Now Alerts")
 
+	setupWebPage()
 	webView := createWebView()
 
 	setupCredsMenu(webView)
 
 	setupExitMenu()
+
+}
+
+func setupWebPage() {
+	go func() {
+		http.Handle("/", http.FileServer(assetFS()))
+		err := http.ListenAndServe(":9999", nil)
+		if err != nil {
+			panic("http listening caused a panic")
+		}
+	}()
+	_viewUrl = "http://127.0.0.1:9999/index.html"
 
 }
 
@@ -64,20 +99,24 @@ func getIconBytes(fileName string) ([]byte, error) {
 
 func createWebView() *webview.WebView {
 	webView := webview.New(webview.Settings{
-		Title:     "Service Now Alerts",
-		URL:       "https://www.google.com",
-		Width:     800,
-		Height:    600,
-		Resizable: true,
+		Title:  "Service Now Alerts",
+		URL:    _viewUrl,
+		Width:  800,
+		Height: 600,
 	})
 	defer webView.Exit()
 	webView.SetFullscreen(true)
+	webView.Dispatch(func() {
+		_serviceNow.url = "https://www.google.com"
+		webView.Bind("svc_now", &_serviceNow)
+	})
 	webView.Run()
 	return &webView
 }
 
 func setupOpenCredsEvent(webView *webview.WebView, mLaunchCredsMenuItem *systray.MenuItem) {
 	<-mLaunchCredsMenuItem.ClickedCh
-	(*webView).Run()
+	(*webView).Exit()
+	webView = createWebView()
 	go setupOpenCredsEvent(webView, mLaunchCredsMenuItem)
 }
